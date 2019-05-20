@@ -402,20 +402,7 @@ def _decode_record(record, name_to_features):
 
   return example
 
-def serving_input_fn():
-    with tf.variable_scope("foo"):
-        feature_spec = {
-            "input_ids": tf.FixedLenFeature([FLAGS.max_seq_length], tf.int64),
-            "input_mask": tf.FixedLenFeature([FLAGS.max_seq_length], tf.int64),
-            "segment_ids": tf.FixedLenFeature([FLAGS.max_seq_length], tf.int64),
-            "label_ids": tf.FixedLenFeature([], tf.int64),
-            }
-    serialized_tf_example = tf.placeholder(dtype=tf.string,
-                                           shape=[None],
-                                           name='input_example_tensor')
-    receiver_tensors = {'examples': serialized_tf_example}
-    features = tf.parse_example(serialized_tf_example, feature_spec)
-    return tf.estimator.export.ServingInputReceiver(features, receiver_tensors)
+
 
 
 
@@ -480,11 +467,7 @@ def main(_):
         max_predictions_per_seq=FLAGS.max_predictions_per_seq,
         is_training=True)
     estimator.train(input_fn=train_input_fn, max_steps=FLAGS.num_train_steps)
-    EXPORT_DIR = '/content'
-    estimator._export_to_tpu = False  # this is important
-    path = estimator.export_savedmodel(EXPORT_DIR, serving_input_fn)
-    print(path)
-
+    
   if FLAGS.do_eval:
     tf.logging.info("***** Running evaluation *****")
     tf.logging.info("  Batch size = %d", FLAGS.eval_batch_size)
