@@ -482,10 +482,10 @@ def main(_):
         max_predictions_per_seq=FLAGS.max_predictions_per_seq,
         is_training=True)
     estimator.train(input_fn=train_input_fn, max_steps=FLAGS.num_train_steps)
-    EXPORT_DIR = 'sample_data/'
-    estimator._export_to_tpu = False  # this is important
-    path = estimator.export_savedmodel(EXPORT_DIR, serving_input_fn)
-    print(path)
+  EXPORT_DIR = 'sample_data/'
+  estimator._export_to_tpu = False  # this is important
+  path = estimator.export_savedmodel(EXPORT_DIR, serving_input_fn)
+  print(path)
     
   if FLAGS.do_eval:
     tf.logging.info("***** Running evaluation *****")
